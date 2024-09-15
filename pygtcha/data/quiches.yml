@@ -1,0 +1,76 @@
+---
+category: quiche
+img_dir: quiches/
+title: la grosse quiche
+---
+Quiche brocoli-fromage:
+  alignment: good
+  img: brocoli.png
+  description: |
+    La quiche mondialisée.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Quiche
+Quiche aux amandes:
+  alignment: good
+  img: amandes.png
+  description: |
+    Et pourquoi pas ?
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Quiche
+Quiche Lorraine:
+  alignment: good
+  img: lorraine.png
+  description: |
+     La quiche lorraine est une variante de quiche, une tarte salée de la
+     cuisine lorraine et de la cuisine française, à base de pâte brisée ou de
+     pâte feuilletée, de migaine (œufs, crème fraîche) et de lardons.
+  links:
+    Marmiton: https://www.marmiton.org/recettes/recette_quiche-lorraine-de-sophie_57113.aspx
+    Wikipedia: https://fr.wikipedia.org/wiki/Quiche_lorraine
+Bacon and Egg:
+  alignment: good
+  img: bacon.png
+  description: |
+    La Bacon and egg quiche, et non pie, est une authentique quiche
+    américanisée, avec des oignons.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Quiche
+Quiche du nouvel an aux tomates:
+  alignment: good
+  img: tomates.png
+  description: |
+    Quiche du nouvel an aux tomates.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Quiche
+Aurore Bergé:
+  alignment: evil
+  img: bergé.png
+  description: |
+    Aurore Bergé, née le 13 novembre 1986 à Paris, est une femme politique
+    française.<br/>
+    Jamais économe en fake-news, contre-vérités et retournement de veste.
+    links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Aurore_Berg%C3%A9#Pol%C3%A9miques
+Sarah El Haïry:
+  alignment: evil
+  img: elhaïry.png
+  description: |
+    Sarah El Haïry, née le 16 mars 1989 à Romorantin-Lanthenay, est une femme
+    politique française.<br/>
+    Élue meilleure humoriste politique pour l'ensemble de son œuvre.
+  links:
+    Youtube: https://www.youtube.com/watch?v=CVGsLZ8bLlk
+Amélie Oudéa-Castéra:
+  alignment: evil
+  img: oudéacastéra.png
+  description: |
+    Amélie Oudéa-Castéra, née Castéra le 9 avril 1978 dans le 14e arrondissement
+    de Paris (France), est une haute fonctionnaire, administratrice de société
+    et femme politique française.<br/>
+    Elle crée la polémique dès sa nomination ministre de l'éducation le 11
+    janvier 2024, notamment en tenant des propos jugés méprisants et mensongers
+    envers l'école publique, ainsi qu'en raison de différents conflits
+    d'intérêts. Elle est remplacée à ce poste par Nicole Belloubet moins d'un
+    mois plus tard, le 8 février.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Am%C3%A9lie_Oud%C3%A9a-Cast%C3%A9ra#Pol%C3%A9miques_et_controverses

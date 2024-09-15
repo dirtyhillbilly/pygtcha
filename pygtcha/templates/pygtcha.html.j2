@@ -1,0 +1,41 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+  <form action="" method="POST">
+    <div>
+      <h1 class="font-alt font-light u-text-center">Clicke sur {{collection.title}}</h1>
+    </div>
+    <div class="w-80p u-center">
+      <div class="row u-flex u-justify-space-evenly">
+	{% for pig in pigs %}
+	  <div class="col-3 p-2 u-flex">
+	    <div class="card card--slide-up u-flex-grow-1">
+	      <div class="card__container">
+		<div class="card__image" style="background-image: url(&quot;static/{{collection.img_dir}}/{{pig.img}}&quot;);">
+		</div>
+	      </div>
+	      <div class="card__mobile-title">
+		<div class="content u-text-center pt-3">
+		  <p id="projectname" class="title mt-2 mb-0">{{ pig.name }}</p>
+		</div>
+	      </div>
+	      <div class="card__body content">
+		<p>{{ pig.desc }}</p>
+		{% for (caption, url) in pig.links %}
+		  <a class="u u-C" href="{{url}}">{{ caption }}</a>
+		{% endfor %}
+	      </div>
+	      <div class="card__action-bar">
+		<button class="btn-link u-center" name="selected" value="{{pig.name}}">
+		  {{pig.name}}
+		</button>
+	      </div>
+	    </div>
+	  </div>
+	{% endfor %}
+	<input type="hidden" name="category" value="{{collection.category}}"/>
+	<input type="hidden" name="pygtcha-cookie-name" value="pygtcha_cookie"/>
+      </div>
+    </div>
+  </form>
+{% endblock %}

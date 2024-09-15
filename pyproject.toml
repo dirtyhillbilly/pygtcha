@@ -1,0 +1,45 @@
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "pygtcha"
+description = "Spot the pig Captcha application"
+license = {text = "GPLv3+"}
+readme = "README.me"
+authors = [{name = "dirtyhillbilly", email = "dhb@abadcafe.net"}]
+keywords = ["captcha", "privacy"]
+classifiers = [
+"Programming Language :: Python :: 3",
+"Development Status :: 4 - Beta",
+"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"]
+dynamic = ["version"]
+requires-python = ">=3.11"
+dependencies = [
+"aiohttp",
+"jinja2",
+"pyyaml"
+]
+
+[tool.flit.external-data]
+directory = "doc"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.blake]
+line-length = 95
+
+[tool.pylint.format]
+max-line-length = 95
+
+[tool.bandit]
+skips = ["B404", "B603"]
+
+[tool.coverage.run]
+source = ["pygtcha"]

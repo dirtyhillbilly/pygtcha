@@ -1,0 +1,160 @@
+---
+category: porcs
+title: l'immonde porc
+img_dir: porcs/
+---
+Miss Peggy:
+  alignment: good
+  img: peggy.png
+  description: |
+    Piggy la cochonne est une des principales marionnettes de la
+    série télévisée Muppets.<br/>C'est une caricature de diva au
+    caractère exubérant, narcissique et aux crises de colère
+    légendaires.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Miss_Piggy
+Porky Pig:
+  alignment: good
+  img: porky.png
+  description: |
+    Porky Pig, parfois appelé Cochonnet, est connu pour son très
+    fort bégaiement, dans lequel il remplace les mots qu'il
+    n'arrive pas à sortir par d'autres mots.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Porky_Pig
+Meyer Habib:
+  alignment: evil
+  img: meyer.png
+  description: |
+    Meyer Habib est une caricature de député au caractère
+    exubérant, narcissique et aux crises de colère légendaires.
+Hamm:
+  alignment: good
+  img: hamm.png
+  description: |
+    Hamm la tirelire rose, est l'un des plus célèbres personnages des
+    films Toy Story. Il lance ses jeux de mots à tout-va et semble
+    être l'un des personnages les plus intelligents de la chambre
+    d'Andy.
+  links:
+    Fandom: https://toy-story.fandom.com/fr/wiki/Bayonne
+Piglet:
+  alignment: good
+  img: piglet.png
+  description: |
+    Porcinet est le meilleur ami de Winnie l'ourson. Il est très
+    peureux et fragile, et ses expressions sont marquées par un
+    bégaiement typique, reflet de ses moindres craintes.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Porcinet
+Edwige Diaz:
+  alignment: evil
+  img: edwigediaz.png
+  description: |
+    Proche du groupuscule néofasciste Bordeaux nationaliste, dissous
+    en 2022 en raison « d’une idéologie xénophobe, appel à la haine et
+    à la violence ».<br/>
+    Climatosceptique, elle compare en 2019 l'écologie à une religion avec
+    «son Divin Enfant Greta Thunberg».
+  links:
+    Streetpress:
+      https://www.streetpress.com/sujet/1718636510-bordeaux-candidate-rassemblement-national-julie-rechagneux-fricote-neonazis
+    Mediapart:
+      https://www.mediapart.fr/journal/ecologie/190624/au-rn-malgre-les-discours-de-facade-les-climatosceptiques-pris-en-flagrant-deni
+Marine Le Pen:
+  alignment: evil
+  img: marinelepen.png
+  description: |
+    Elle est impliquée dans des scandales à répétition : scandale des
+    financements de son micro-parti en 2010, scandale des prêts russes
+    en 2014, scandales des assistants parlementaires du FN au Parlement
+    Européen en 2017.<br/>
+    En avril 2014, elle est condamnée par le tribunal de Béthune pour
+    l'affaire des faux tracts à Hénin-Beaumont.<br/>
+    En 2014 et 2023, elle fournit une sous-évaluation de son
+    patrimoine immobilier lors de sa déclaration d'impôts.<br>
+  links:
+    Faux tracts:
+      https://www.lemonde.fr/societe/article/2014/04/03/marine-le-pen-condamnee-dans-le-proces-du-faux-tract_4395305_3224.html
+    Micro-parti:
+      https://www.lemonde.fr/politique/article/2014/04/15/le-microparti-de-marine-le-pen-vise-par-une-information-judiciaire_4402010_823448.html
+    Assistants parlementaires:
+      https://www.lefigaro.fr/elections/presidentielles/2017/01/27/35003-20170127ARTFIG00190-assistants-parlementaires-marine-le-pen-sommee-de-payer-340000-euros.php
+    Les décodeurs:
+      https://www.lemonde.fr/les-decodeurs/article/2017/02/02/les-trois-affaires-qui-menacent-marine-le-pen-et-le-front-national_5073473_4355770.html
+Rita:
+  alignment: good
+  img: rita.png
+  description: |
+    Une amour de truie 💘
+Riton:
+  alignment: good
+  img: riton.png
+  description: |
+    Un amour de cochon 💘
+Naf-Naf:
+  alignment: good
+  img: nafnaf.png
+  description: |
+    Le cochon pratique
+Nif-Nif:
+  alignment: good
+  img: nifnif.png
+  description: |
+    Le cochon violoniste
+Nouf-Nouf:
+  alignment: good
+  img: noufnouf.png
+  description: |
+    Le cochon flûtiste
+Okja:
+  alignment: good
+  img: okja.png
+  description: |
+    Okja est un « super cochon » génétiquement modifié, élevé en Corée
+    du Sud par Mija, une fillette, et son grand-père.
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Okja
+Nago:
+  alignment: good
+  img: nago.png
+  description: |
+    Nago était un autre dieu-sanglier qui a longtemps écarté les
+    hommes de la forêt sacrée. Mais, comme Moro, il a été victime des
+    arquebuses des forgerons. Le poison de la balle lui a causé une
+    souffrance atroce. Accumulant la haine dans sa fuite, il est
+    devenu rapidement maléfique et il attaque aveuglément le village
+    Emishi. Stoppé par Ashitaka, il maudira les humains avant de
+    mourir.
+  links:
+    Buta Connection:
+      https://www.buta-connection.net/index.php/longs-metrages/films-de-hayao-miyazaki/princesse-mononoke?start=2
+Okkotonushi:
+  alignment: good
+  img: okkotonushi.png
+  description: |
+    Okkotonushi, 500 ans, est un des dieux les plus mythiques. Il est
+    reconnaissable par son pelage blanc et ses quatres défenses.
+  links:
+    Buta Connection:
+      https://www.buta-connection.net/index.php/longs-metrages/films-de-hayao-miyazaki/princesse-mononoke?start=2
+Porco Rosso:
+  alignment: good
+  img: porcorosso.png
+  description: |
+    En Italie, durant la période de l'entre-deux-guerres, sur fond de
+    récession économique et de montée du fascisme, Marco Pagot, un
+    ancien pilote émérite du corps aéronautique (it) de l'armée royale
+    italienne, se voit transformé en cochon et se reconvertit en
+    chasseur de primes sous le nom de « Porco Rosso »
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Porco_Rosso
+Bebop:
+  alignment: good
+  img: bebop.png
+  description: |
+    Un mutant grossier et pas très malin apparaissant dans la série de
+    1987 des Teenage Mutant Ninja Turtles.
+  links:
+    Wikipedia:
+      https://fr.wikipedia.org/wiki/Personnages_des_Tortues_Ninja#Bebop_et_Rocksteady
