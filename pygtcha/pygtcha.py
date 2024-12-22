@@ -2,6 +2,7 @@
 Serve simple opinionated captcha, and set auth cookie accordingly.
 """
 
+import base64
 import dataclasses
 import hashlib
 import importlib.resources
@@ -10,12 +11,15 @@ import os
 import random
 from collections import defaultdict
 from enum import Enum
+from io import BytesIO
+from pathlib import PosixPath
+from typing import cast
 
 import aiohttp
 import aiohttp.web
 import yaml  # type: ignore
-from icecream import ic
 from jinja2 import Environment, PackageLoader, select_autoescape
+from PIL import Image
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -28,13 +32,53 @@ class Alignment(Enum):
     EVIL = "evil"
 
 
+def _png_to_b64(path: PosixPath) -> str:
+    assert path.suffix == ".png"
+    with path.open("rb") as imgfile:
+        res = base64.b64encode(imgfile.read())
+    return res.decode()
+
+
+def _crop(
+    box: tuple[float, float, float, float], size: tuple[float, float]
+) -> tuple[float, float, float, float]:
+    dx, dy, dX, dY = box
+    width, height = size
+    dx = min(width, max(0, dx))
+    dy = min(height, max(0, dy))
+    dX = min(width, max(0, dX))
+    dY = min(height, max(0, dY))
+    return (dx, dy, dX, dY)
+
+
+def _load_thumbnail(path: PosixPath, dx: int, dy: int, radius: int) -> str:
+    output = BytesIO()
+    with Image.open(path) as image:
+        box = _crop(
+            (dx - radius / 2, dy - radius / 2, dx + radius / 2, dy + radius / 2),
+            (image.width, image.height),
+        )
+        thumb = image.resize(size=(128, 128), box=box)
+        thumb.save(output, format="png")
+    res = base64.b64encode(output.getvalue())
+    return res.decode()
+
+
 @dataclasses.dataclass
 class Pig:
     name: str
     align: Alignment
     desc: str
-    img: str | None = None
+    img: PosixPath
+    miniature: tuple[int, int, int] | None
     links: list[tuple[str, str]] | None = None
+    img_data: str = dataclasses.field(init=False)
+    thumbnail: str = dataclasses.field(init=False)
+
+    def __post_init__(self):
+        self.img_data = _png_to_b64(self.img)
+        if self.miniature is not None:
+            self.thumbnail = _load_thumbnail(self.img, *self.miniature)
 
 
 @dataclasses.dataclass
@@ -128,12 +172,23 @@ class PigSelector:
                 links = [(name, url) for name, url in pig["links"].items()]
             else:
                 links = []
+            if "miniature" in pig:
+                miniature = cast(
+                    tuple[int, int, int],
+                    tuple(map(int, pig["miniature"].split(","))),
+                )
+            else:
+                miniature = None
             self.collection[category].add(
                 Pig(
                     name,
                     Alignment(pig["alignment"]),
                     pig["description"],
-                    pig["img"],
+                    importlib.resources.files("pygtcha")
+                    / "static"
+                    / header["img_dir"]
+                    / pig["img"],
+                    miniature,
                     links,
                 )
             )
