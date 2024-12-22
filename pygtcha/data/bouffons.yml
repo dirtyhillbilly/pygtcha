@@ -6,6 +6,7 @@ title: le bouffon ridicule
 Danseur mauresque:
   alignment: good
   img: danseur.png
+  miniature: 322,139,104
   description: |
     Josef Baumgartner et artisans, d’après E. Grasser, Danseur mauresque.
   links:
@@ -13,6 +14,7 @@ Danseur mauresque:
 Le Bouffon:
   alignment: good
   img: jester.png
+  miniature: 260,185,215
   description: |
     Le Bouffon, Marx Reichlich, Yale University Art Gallery.
   links:
@@ -20,6 +22,7 @@ Le Bouffon:
 Rigoletto:
   alignment: good
   img: rigoletto.png
+  miniature: 319,95,120
   description: |
     Ludovic Napoléon Lepic, Projet de costume pour Rigoletto.
   links:
@@ -27,6 +30,7 @@ Rigoletto:
 Gonella:
   alignment: good
   img: gonella.png
+  miniature: 375,279,250
   description: |
     Portrait du bouffon Gonella, tableau attribué à Jean Fouquet, vers 1440-1445, musée d'histoire de l'art de Vienne.
   links:
@@ -34,6 +38,7 @@ Gonella:
 Triboulet:
   alignment: good
   img: triboulet.png
+  miniature: 143,112,107
   description: |
     Triboulet, bouffon de légende. Nicolas Ferrial, dit Le Févrial, alias Triboulet, né en 1479 à Blois (actuel Loir-et-Cher) et mort en 1536, est le bouffon de la cour de France sous les règnes de Louis XII et François Ier.
   links:
@@ -41,6 +46,7 @@ Triboulet:
 Schalksnarr:
   alignment: good
   img: schalksnarr.png
+  miniature: 343,215,200
   description: |
     c. 1540 woodcut of a jester, by Heinrich Vogtherr the Younger
   links:
@@ -48,6 +54,7 @@ Schalksnarr:
 Court Jester:
   alignment: good
   img: keyingup.png
+  miniature: 273,197,110
   description: |
     "Keying Up" – The Court Jester by William Merritt Chase, 1875 (Pennsylvania Academy of the Fine Arts)
   links:
@@ -55,6 +62,7 @@ Court Jester:
 Stańczyk:
   alignment: good
   img: stańczyk.png
+  miniature: 409,202,100
   description: |
     Stańczyk, né en 1480 et mort en 1560, est un célèbre bouffon à la cour de la Pologne. Il a travaillé sous les règnes de : Alexandre Ier Jagellon, Sigismond Ier de Pologne et Sigismond II de Pologne.
   links:
@@ -62,6 +70,7 @@ Stańczyk:
 Will Sommers:
   alignment: good
   img: sommers.png
+  miniature: 262,120,120
   description: |
     Will Sommers, fou d'Henry VIII, est sans doute le premier comédien de la Renaissance anglaise à entrer dans l’histoire en étant notamment transformé en personnage par Thomas Nashe dans sa pièce Summers Last Will and Testament (vers 1593).
   links:
@@ -69,6 +78,7 @@ Will Sommers:
 Christophe Barbier:
   alignment: evil
   img: barbier.png
+  miniature: 173,156,340
   description: |
     En 2017, il déclare notamment au Journal du dimanche : « Se confronter au terrain pollue l’esprit de l’éditorialiste. Son rôle est de donner son opinion, d’affirmer ses certitudes, par essence improuvables. Afficher avec force ses convictions permet aux lecteurs de s’y frotter pour former les leurs. » et « L'éditorialiste est comme un tuteur sur lequel le peuple, comme du lierre rampant, peut s'élever ».
   links:
@@ -76,6 +86,7 @@ Christophe Barbier:
 Raphaël Enthoven:
   alignment: evil
   img: enthoven.png
+  miniature: 254,191,340
   description: |
     Chroniqueur médiatique, il est régulièrement invité par des chaînes d'information en continu (CNews, LCI, BFM TV), où il commente l'actualité politique.
     Le parti La France insoumise (LFI) a déposé plainte en 2024 après qu’Enthoven a qualifié le parti de « détestable, violent, complotiste et passionnément antisémite » ainsi que de « club de déficients ». LFI estime que les propos d’Enthoven constituent une attaque gratuite et une atteinte à l’image du parti, visant à le discréditer dans l’opinion publique.

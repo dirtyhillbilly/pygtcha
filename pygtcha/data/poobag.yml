@@ -6,37 +6,44 @@ title: le sac à merde
 Sacs à crottes:
   alignment: good
   img: manomano.png
+  miniature: 374,379,350
   description: |
     Sacs à crottes pour chiens 750 pcs noir 30x20 cm PE vidaXL
 Sacs à crottes multicolores:
   alignment: good
   img: multicolor.png
+  miniature: 260,164,256
   description: |
     Lot De 12 Rouleaux Ramasse Crotte Multicolore
 Portable Pet Garbage Bag:
   alignment: good
   img: silicone.png
+  miniature: 148,167,150
   description: |
     Creative Silicone Dog Toilet Pickup Bag Carrier
 Hami form:
   alignment: good
   img: compostable.png
+  miniature: 232,186,190
   description: |
     Sacs à crottes compostables
 Sac à crottins:
   alignment: good
   img: poney.png
+  miniature: 240,233,280
   description: |
     Sac à crottins cheval ou poney monté
 Petkit:
   alignment: good
   img: chat.png
+  miniature: 197,182,210
   description: |
     Petkit – sac à caca pour nettoyage automatique, bac de toilette pour chat,
     boîte à 2 rouleaux avec poignée, mains libres, sale pour bac à litière.
 Laurent Wauquiez:
   alignment: evil
   img: wauquiez.png
+  miniature: 272,226,220
   description: |
     Au hasard: en décembre 2015, Laurent Wauquiez déclare vouloir « fermer les
     formations fantaisistes comme celles des métiers du cirque et des
@@ -49,6 +56,7 @@ Laurent Wauquiez:
 Bruno Le Maire:
   alignment: evil
   img: lemaire.png
+  miniature: 215,188,200
   description: |
     Bruno Le Maire, né le 15 avril 1969 à Neuilly-sur-Seine (Hauts-de-Seine),
     est un homme politique et écrivain français.<br/>
