@@ -14,6 +14,7 @@ from enum import Enum
 from io import BytesIO
 from pathlib import PosixPath
 from typing import cast
+from uuid import uuid4
 
 import aiohttp
 import aiohttp.web
@@ -67,6 +68,7 @@ def _load_thumbnail(path: PosixPath, dx: int, dy: int, radius: int) -> str:
 @dataclasses.dataclass
 class Pig:
     name: str
+    uuid: str
     align: Alignment
     desc: str
     img: PosixPath
@@ -106,7 +108,7 @@ class Pygtcha(aiohttp.web.View):
         j2env = self.request.app["j2env"]
         template = j2env.get_template("pygtcha.html.j2")
         pig_selector = self.request.app["selector"]
-        collection, pigs = pig_selector.select(4)
+        collection, pigs = pig_selector.select(5)
         res = template.render(collection=collection, pigs=pigs)
         return aiohttp.web.Response(text=res, content_type="text/html")
 
@@ -182,6 +184,7 @@ class PigSelector:
             self.collection[category].add(
                 Pig(
                     name,
+                    uuid4().hex,
                     Alignment(pig["alignment"]),
                     pig["description"],
                     importlib.resources.files("pygtcha")

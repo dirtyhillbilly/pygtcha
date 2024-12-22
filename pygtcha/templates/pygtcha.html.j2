@@ -1,25 +1,64 @@
 {% extends "base.html.j2" %}
 
+{% block header %}
+  <script>
+    pigs = new Map();
+    {% for pig in pigs %}
+      pigs["{{pig.uuid}}"] = { img: "{{pig.img_data}}",
+      name: "{{pig.name}}",
+      desc: `{{pig.desc}}`};
+    {% endfor %}
+
+    function showFullImage(uuid) {
+    const container = document.getElementById("full-size-pig");
+    const pig = pigs[uuid];
+    container.innerHTML = `
+    <div class="frame" >
+      <div class="frame__header u-text-center u-align-center">
+	<div>
+	  <figure class="" style="max-width: 8em; margin: auto;">
+	    <img class="img-stretch" src="data:image/png;base64,${pig.img}">
+	  </figure>
+	</div>
+	<div>
+          <h6 class="frame__title">${pig.name}</h6>
+        </div>
+      </div>
+      <div class="frame__body">
+	<div class="content u-text-center">
+	  <p>
+	    ${pig.desc}
+	  </p>
+	</div>
+      </div>
+    </div>
+    `;
+    }
+  </script>
+
+{% endblock %}
+
 {% block content %}
   <form action="" method="POST">
     <div>
       <h1 class="font-alt font-light u-text-center">Clicke sur {{collection.title}}</h1>
     </div>
-    <div class="w-80p u-center">
-      <div>
-	{% for pig in pigs %}
-	  <div>
-	    <img src="data:image/png;base64,{{pig.thumbnail}}">
-	    {#
-	    <button class="btn-link u-center" name="selected" value="{{pig.name}}">
-	      {{pig.name}}
-	    </button>
-	    #}
-	  </div>
-	{% endfor %}
-	<input type="hidden" name="category" value="{{collection.category}}"/>
-	<input type="hidden" name="pygtcha-cookie-name" value="pygtcha_cookie"/>
-      </div>
+    <div class="u-flex u-justify-center">
+      {% for pig in pigs %}
+	<div>
+	  <img class="img-stretch"
+	       onmouseover="showFullImage('{{pig.uuid}}')"
+	       src="data:image/png;base64,{{pig.thumbnail or pig.img_data}}">
+	       {#
+	       <button class="btn-link u-center" name="selected" value="{{pig.name}}">
+		 {{pig.name}}
+	       </button>
+	       #}
+	</div>
+      {% endfor %}
+      <input type="hidden" name="category" value="{{collection.category}}"/>
+      <input type="hidden" name="pygtcha-cookie-name" value="pygtcha_cookie"/>
     </div>
   </form>
+  <div class="u-flex u-flex-column u-align-center" id="full-size-pig"></div>
 {% endblock %}
