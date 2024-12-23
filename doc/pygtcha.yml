@@ -1,0 +1,4 @@
+---
+secret: verysecret
+cookie_name: pygtcha
+url: http://pygtcha.example.com
