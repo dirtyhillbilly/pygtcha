@@ -20,7 +20,8 @@ dependencies = [
 "jinja2",
 "pyyaml",
 "pyjwt",
-"gunicorn"
+"gunicorn",
+"pillow"
 ]
 
 [tool.flit.external-data]
