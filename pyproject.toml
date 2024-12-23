@@ -19,7 +19,8 @@ dependencies = [
 "aiohttp",
 "jinja2",
 "pyyaml",
-"pyjwt"
+"pyjwt",
+"gunicorn"
 ]
 
 [tool.flit.external-data]
