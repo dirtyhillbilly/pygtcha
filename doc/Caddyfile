@@ -1,6 +1,6 @@
 
 http://localhost:8081 {
-	root * /net/services/docs
+	root * /var/www
 	file_server browse
 }
 

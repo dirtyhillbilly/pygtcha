@@ -31,9 +31,6 @@ logger = logging.getLogger()
 
 PIGS = ["porcs.yml", "bouffons.yml", "quiches.yml", "poobag.yml"]
 
-SECRET = "asdcdsfv"
-COOKIE_NAME = "pygtcha"
-
 
 class Alignment(Enum):
     GOOD = "good"
@@ -139,12 +136,12 @@ class PygtchaVerify(aiohttp.web.View):
     @temporize
     async def get(self):
         """Main handler"""
-
-        cookie = self.request.cookies.get(COOKIE_NAME)
+        config = self.request.app["config"]
+        cookie = self.request.cookies.get(config.cookie_name)
         # logger.debug(self.request.headers)
         if cookie:
             try:
-                jwt.decode(cookie, SECRET, algorithms="HS256")
+                jwt.decode(cookie, config.secret, algorithms="HS256")
             except jwt.PyJWTError:
                 # will redirect
                 pass
@@ -167,8 +164,8 @@ class PygtchaVerify(aiohttp.web.View):
         payload["domain"] = domain
         payload["csrf"] = uuid4().hex
 
-        jwt_cookie = jwt.encode(payload, SECRET)
-        res.set_cookie(f"{COOKIE_NAME}-redirect", jwt_cookie, samesite="None")
+        jwt_cookie = jwt.encode(payload, config.secret)
+        res.set_cookie(f"{config.cookie_name}-redirect", jwt_cookie, samesite="None")
         return res
 
 
@@ -178,13 +175,14 @@ class PygtchaAuth(aiohttp.web.View):
     async def get(self):
         """Main handler"""
         logger.debug("Getting pygtcha")
+        config = self.request.app["config"]
         j2env = self.request.app["j2env"]
         template = j2env.get_template("pygtcha.html.j2")
         pig_selector = self.request.app["selector"]
-        jwt_cookie = self.request.cookies.get(f"{COOKIE_NAME}-redirect", "")
+        jwt_cookie = self.request.cookies.get(f"{config.cookie_name}-redirect", "")
 
         try:
-            redirect = jwt.decode(jwt_cookie, SECRET, algorithms="HS256")
+            redirect = jwt.decode(jwt_cookie, config.secret, algorithms="HS256")
             if len(redirect.get("csrf", "")) != 32:
                 logger.debug("Invalid CSRF")
                 raise ValueError
@@ -193,7 +191,7 @@ class PygtchaAuth(aiohttp.web.View):
             logger.error(f"Can't validate token [{jwt_cookie}]: {exc}")
             retry = self.request.app.router["verify"].url_for()
             res = aiohttp.web.HTTPFound(retry)
-            res.del_cookie(f"{COOKIE_NAME}-redirect")
+            res.del_cookie(f"{config.cookie_name}-redirect")
             return res
 
         redirect_url = redirect.get("redirect_url")
@@ -207,23 +205,24 @@ class PygtchaAuth(aiohttp.web.View):
     @temporize
     async def post(self):
         """Main handler"""
+        config = self.request.app["config"]
         post_data = await self.request.post()
         category = post_data.get("category")
         pig = post_data.get("selected")
         redirect_url = urllib.parse.unquote_plus(post_data.get("redirect", ""))
-        logger.debug(f"Validating {COOKIE_NAME}={pig}")
+        logger.debug(f"Validating {config.cookie_name}={pig}")
         pig_selector = self.request.app["selector"]
         if pig_selector.is_evil(category, pig):
             logger.debug("Ok, access granted")
-            cookie = jwt.encode(jwt_payload(), SECRET)
+            cookie = jwt.encode(jwt_payload(), config.secret)
             res = aiohttp.web.HTTPFound(redirect_url)
-            res.set_cookie(COOKIE_NAME, cookie, samesite="None")
-            res.del_cookie(f"{COOKIE_NAME}-redirect")
+            res.set_cookie(config.cookie_name, cookie, samesite="None")
+            res.del_cookie(f"{config.cookie_name}-redirect")
         else:
             logger.debug("Ko, access refused")
             retry = self.request.app.router["auth"].url_for()
             res = aiohttp.web.HTTPFound(retry)
-            res.del_cookie(COOKIE_NAME)
+            res.del_cookie(config.cookie_name)
         return res
 
 
@@ -290,6 +289,24 @@ class PigSelector:
             )
 
 
+@dataclasses.dataclass
+class Config:
+    secret: str
+    cookie_name: str
+    url: str
+
+
+def load_config(conffile: str = "/etc/pygtcha.yml"):
+    with open(conffile, "r") as f:
+        config = yaml.safe_load(f)
+
+    return Config(
+        secret=config.get("secret", uuid4().hex),
+        cookie_name=config.get("cookie_name", "pygtcha"),
+        url=config.get("url"),
+    )
+
+
 async def app():
     _app = aiohttp.web.Application()
     _app.add_routes(
@@ -299,12 +316,10 @@ async def app():
         ]
     )
     _app.router.add_static("/static", "pygtcha/static")
-    _app["salt"] = os.environ.get("PYGTCHA_SALT")
+    _app["config"] = load_config(os.environ.get("PYGTCHA_CONFIG"))
     _app["j2env"] = Environment(
         loader=PackageLoader("pygtcha"), autoescape=select_autoescape()
     )
-    if _app["salt"] is None:
-        raise ValueError("Environment variable PYGTCHA_SALT is not defined")
     _app["selector"] = PigSelector()
 
     return _app

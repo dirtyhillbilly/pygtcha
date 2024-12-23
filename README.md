@@ -1,5 +1,5 @@
 
 Start debugging server
 ```
-PYGTCHA_SALT=foobar gunicorn pygtcha.pygtcha:app --bind localhost:8000 --worker-class aiohttp.GunicornWebWorker --reload
+PYGTCHA_CONFIG=doc/pygtcha.yml gunicorn pygtcha.pygtcha:app --bind localhost:8000 --worker-class aiohttp.GunicornWebWorker --reload
 ```

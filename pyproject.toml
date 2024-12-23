@@ -6,7 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "pygtcha"
 description = "Spot the pig Captcha application"
 license = {text = "GPLv3+"}
-readme = "README.me"
+readme = "README.md"
 authors = [{name = "dirtyhillbilly", email = "dhb@abadcafe.net"}]
 keywords = ["captcha", "privacy"]
 classifiers = [
@@ -18,7 +18,9 @@ requires-python = ">=3.11"
 dependencies = [
 "aiohttp",
 "jinja2",
-"pyyaml"
+"pyyaml",
+"pyjwt",
+"gunicorn"
 ]
 
 [tool.flit.external-data]
