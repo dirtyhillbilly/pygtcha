@@ -2,8 +2,10 @@
 Serve simple opinionated captcha, and set auth cookie accordingly.
 """
 
+import asyncio
 import base64
 import dataclasses
+import functools
 import importlib.resources
 import logging
 import os
@@ -28,6 +30,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 PIGS = ["porcs.yml", "bouffons.yml", "quiches.yml", "poobag.yml"]
+
 SECRET = "asdcdsfv"
 COOKIE_NAME = "pygtcha"
 
@@ -104,18 +107,41 @@ class PigCollection:
             self.evil.append(pig)
 
 
+def jwt_payload(ttl=None):
+    if ttl is None:
+        expiration = {"days": 365}
+    else:
+        expiration = {"seconds": ttl}
+
+    now = datetime.now(tz=timezone.utc)
+    exp = now + timedelta(**expiration)
+    nbf = now - timedelta(seconds=1)
+    return {"iat": now, "exp": exp, "nbf": nbf}
+
+
+def temporize(func):
+    @functools.wraps(func)
+    async def wrapped(self):
+        try:
+            res = await func(self)
+        except aiohttp.web.HTTPOk:
+            logger.debug("Ok")
+            raise
+        else:
+            await asyncio.sleep(0.5)
+        return res
+
+    return wrapped
+
+
 class PygtchaVerify(aiohttp.web.View):
 
+    @temporize
     async def get(self):
         """Main handler"""
 
         cookie = self.request.cookies.get(COOKIE_NAME)
-        logger.debug(self.request.headers)
-        authenticator = self.request.headers["pygtcha-url"]
-        proto = self.request.headers["X-Forwarded-Proto"]
-        domain = self.request.headers["X-Forwarded-Host"]
-        path = self.request.headers["X-Forwarded-Uri"]
-        redirect_url = urllib.parse.quote_plus(f"{proto}://{domain}{path}")
+        # logger.debug(self.request.headers)
         if cookie:
             try:
                 jwt.decode(cookie, SECRET, algorithms="HS256")
@@ -125,22 +151,52 @@ class PygtchaVerify(aiohttp.web.View):
             else:
                 raise aiohttp.web.HTTPOk
 
-        # redirect to captcha page
+        # build redirection to captcha page
+
+        proto = self.request.headers.get("X-Forwarded-Proto")
+        domain = self.request.headers.get("X-Forwarded-Host")
+        path = self.request.headers.get("X-Forwarded-Uri")
+        redirect_url = f"{proto}://{domain}{path}"
+
+        authenticator = self.request.headers.get("pygtcha-url", redirect_url)
+
         res = aiohttp.web.HTTPFound(authenticator)
-        res.set_cookie(f"{COOKIE_NAME}-redirect", redirect_url, samesite="None")
+        payload = jwt_payload(ttl=600)
+
+        payload["redirect_url"] = redirect_url
+        payload["domain"] = domain
+        payload["csrf"] = uuid4().hex
+
+        jwt_cookie = jwt.encode(payload, SECRET)
+        res.set_cookie(f"{COOKIE_NAME}-redirect", jwt_cookie, samesite="None")
         return res
 
 
 class PygtchaAuth(aiohttp.web.View):
 
+    @temporize
     async def get(self):
         """Main handler"""
         logger.debug("Getting pygtcha")
         j2env = self.request.app["j2env"]
         template = j2env.get_template("pygtcha.html.j2")
         pig_selector = self.request.app["selector"]
-        redirect_url = self.request.cookies.get(f"{COOKIE_NAME}-redirect")
-        # redirect_url = self.request.query.get("redirect_url")
+        jwt_cookie = self.request.cookies.get(f"{COOKIE_NAME}-redirect", "")
+
+        try:
+            redirect = jwt.decode(jwt_cookie, SECRET, algorithms="HS256")
+            if len(redirect.get("csrf", "")) != 32:
+                logger.debug("Invalid CSRF")
+                raise ValueError
+        except (jwt.PyJWTError, ValueError) as exc:
+            # invalid redirect cookie : get back to /verify
+            logger.error(f"Can't validate token [{jwt_cookie}]: {exc}")
+            retry = self.request.app.router["verify"].url_for()
+            res = aiohttp.web.HTTPFound(retry)
+            res.del_cookie(f"{COOKIE_NAME}-redirect")
+            return res
+
+        redirect_url = redirect.get("redirect_url")
         collection, pigs = pig_selector.select(5)
         res = template.render(
             collection=collection, pigs=pigs, redirect_url=redirect_url
@@ -148,24 +204,18 @@ class PygtchaAuth(aiohttp.web.View):
         res = aiohttp.web.Response(text=res, content_type="text/html")
         return res
 
-    @staticmethod
-    def jwt_payload():
-        now = datetime.now(tz=timezone.utc)
-        exp = now + timedelta(days=365)
-        nbf = now - timedelta(seconds=20)
-        return {"iat": now, "exp": exp, "nbf": nbf}
-
+    @temporize
     async def post(self):
         """Main handler"""
         post_data = await self.request.post()
         category = post_data.get("category")
         pig = post_data.get("selected")
-        redirect_url = urllib.parse.unquote_plus(post_data.get("redirect"))
+        redirect_url = urllib.parse.unquote_plus(post_data.get("redirect", ""))
         logger.debug(f"Validating {COOKIE_NAME}={pig}")
         pig_selector = self.request.app["selector"]
         if pig_selector.is_evil(category, pig):
             logger.debug("Ok, access granted")
-            cookie = jwt.encode(self.jwt_payload(), SECRET)
+            cookie = jwt.encode(jwt_payload(), SECRET)
             res = aiohttp.web.HTTPFound(redirect_url)
             res.set_cookie(COOKIE_NAME, cookie, samesite="None")
             res.del_cookie(f"{COOKIE_NAME}-redirect")
