@@ -7,7 +7,7 @@ http://localhost:8081 {
 # Serve your app
 http://localhost:8080 {
 	forward_auth * localhost:8000 {
-		uri "/verify?secret=asdhviadufhvi"
+		uri "/verify"
 		header_up pygtcha-url "http://localhost:8000/auth"
 	}
 	reverse_proxy http://localhost:8081
