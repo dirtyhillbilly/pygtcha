@@ -15,7 +15,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 from io import BytesIO
-from pathlib import PosixPath
+from pathlib import Path
 from typing import cast
 from uuid import uuid4
 
@@ -37,7 +37,7 @@ class Alignment(Enum):
     EVIL = "evil"
 
 
-def _png_to_b64(path: PosixPath) -> str:
+def _png_to_b64(path: Path) -> str:
     assert path.suffix == ".png"
     with path.open("rb") as imgfile:
         res = base64.b64encode(imgfile.read())
@@ -56,7 +56,7 @@ def _crop(
     return (dx, dy, dX, dY)
 
 
-def _load_thumbnail(path: PosixPath, dx: int, dy: int, radius: int) -> str:
+def _load_thumbnail(path: Path, dx: int, dy: int, radius: int) -> str:
     output = BytesIO()
     with Image.open(path) as image:
         box = _crop(
@@ -75,7 +75,7 @@ class Pig:
     uuid: str
     align: Alignment
     desc: str
-    img: PosixPath
+    img: Path
     miniature: tuple[int, int, int] | None
     links: list[tuple[str, str]] | None = None
     img_data: str = dataclasses.field(init=False)
@@ -315,7 +315,8 @@ async def app():
             aiohttp.web.view("/auth", PygtchaAuth, name="auth"),
         ]
     )
-    _app.router.add_static("/static", "pygtcha/static")
+    source_path = Path(__file__).resolve().parent
+    _app.router.add_static("/static", source_path / "static")
     _app["config"] = load_config(os.environ.get("PYGTCHA_CONFIG"))
     _app["j2env"] = Environment(
         loader=PackageLoader("pygtcha"), autoescape=select_autoescape()
