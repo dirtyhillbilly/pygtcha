@@ -16,7 +16,7 @@
     <div class="frame" >
       <div class="frame__header u-text-center u-align-center">
 	<div>
-	  <figure class="" style="max-width: 8em; margin: auto;">
+	  <figure class="pyg">
 	    <img class="img-stretch" src="data:image/png;base64,${pig.img}">
 	  </figure>
 	</div>
@@ -36,6 +36,19 @@
     }
   </script>
 
+  <style>
+    button.pyg {
+      padding:0;
+      border:0;
+    }
+
+    figure.pyg {
+      max-width: 8em;
+      margin: auto;
+    }
+
+  </style>
+
 {% endblock %}
 
 {% block content %}
@@ -46,18 +59,14 @@
     <div class="u-flex u-justify-center">
       {% for pig in pigs %}
 	<div>
+	  <button class="pyg" onmouseover="showFullImage('{{pig.uuid}}')" name="selected" value="{{pig.name}}">
 	  <img class="img-stretch"
-	       onmouseover="showFullImage('{{pig.uuid}}')"
 	       src="data:image/png;base64,{{pig.thumbnail or pig.img_data}}">
-	       {#
-	       <button class="btn-link u-center" name="selected" value="{{pig.name}}">
-		 {{pig.name}}
-	       </button>
-	       #}
+	  </button>
 	</div>
       {% endfor %}
       <input type="hidden" name="category" value="{{collection.category}}"/>
-      <input type="hidden" name="pygtcha-cookie-name" value="pygtcha_cookie"/>
+      <input type="hidden" name="redirect" value="{{redirect_url}}"/>
     </div>
   </form>
   <div class="u-flex u-flex-column u-align-center" id="full-size-pig"></div>
