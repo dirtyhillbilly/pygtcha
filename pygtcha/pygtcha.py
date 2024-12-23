@@ -315,7 +315,7 @@ async def app():
             aiohttp.web.view("/auth", PygtchaAuth, name="auth"),
         ]
     )
-    source_path = Path(__file__).resolve().parent
+    source_path = Path(__file__).parent.resolve()
     _app.router.add_static("/static", source_path / "static")
     _app["config"] = load_config(os.environ.get("PYGTCHA_CONFIG"))
     _app["j2env"] = Environment(
