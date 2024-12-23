@@ -1,0 +1,14 @@
+
+http://localhost:8081 {
+	root * /net/services/docs
+	file_server browse
+}
+
+# Serve your app
+http://localhost:8080 {
+	forward_auth * localhost:8000 {
+		uri "/verify?secret=asdhviadufhvi"
+		header_up pygtcha-url "http://localhost:8000/auth"
+	}
+	reverse_proxy http://localhost:8081
+}
