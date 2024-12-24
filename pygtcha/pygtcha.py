@@ -55,9 +55,15 @@ def _crop(
     return (dx, dy, dX, dY)
 
 
-def _load_thumbnail(path: Path, dx: int, dy: int, radius: int) -> str:
+def _load_thumbnail(
+    path: Path, dx: int | None = None, dy: int | None = None, radius: int | None = None
+) -> str:
     output = BytesIO()
     with Image.open(path) as image:
+        if radius is None:
+            radius = min(image.width, image.height) / 2
+            dx = radius
+            dy = radius
         box = _crop(
             (dx - radius / 2, dy - radius / 2, dx + radius / 2, dy + radius / 2),
             (image.width, image.height),

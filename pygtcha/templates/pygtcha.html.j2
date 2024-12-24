@@ -43,10 +43,13 @@
     }
 
     figure.pyg {
-      max-width: 8em;
+      max-width: 12em;
       margin: auto;
     }
 
+    img.pyg {
+      max-height: 8em;
+    }
   </style>
 
 {% endblock %}
@@ -60,8 +63,8 @@
       {% for pig in pigs %}
 	<div>
 	  <button class="pyg" onmouseover="showFullImage('{{pig.uuid}}')" name="selected" value="{{pig.uuid}}">
-	  <img class="img-stretch"
-	       src="data:image/png;base64,{{pig.thumbnail or pig.img_data}}">
+	    <img class="img-stretch pyg"
+		 src="data:image/png;base64,{{pig.thumbnail or pig.img_data}}">
 	  </button>
 	</div>
       {% endfor %}
