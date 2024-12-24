@@ -25,10 +25,10 @@ import yaml  # type: ignore
 from jinja2 import Environment, PackageLoader, select_autoescape
 from PIL import Image
 
-logging.basicConfig(filename="/var/log/pygtcha/pygtcha.log", level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
-PIGS = ["porcs.yml", "bouffons.yml", "quiches.yml", "poobag.yml"]
+PIGS = ["porcs.yml", "bouffons.yml", "quiches.yml", "poobag.yml", "deepshit.yml"]
 
 
 class Alignment(Enum):
@@ -124,7 +124,7 @@ def temporize(func):
             logger.debug("Ok")
             raise
         else:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0)
         return res
 
     return wrapped
@@ -291,7 +291,7 @@ class PigSelector:
                     name,
                     uuid4().hex,
                     Alignment(pig["alignment"]),
-                    pig["description"],
+                    pig.get("description", ""),
                     importlib.resources.files("pygtcha")
                     / "static"
                     / header["img_dir"]

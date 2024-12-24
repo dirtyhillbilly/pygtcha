@@ -1,0 +1,52 @@
+---
+category: deepshit
+img_dir: deepshit/
+title: quelqu'un bien dans la merde
+---
+Nicolas Sarkozy:
+  alignment: evil
+  img: sarkozy.png
+  description: |
+    - Affaire Woerth-Bettencourt<br/>
+    - Affaire des sondages de l'Élysée<br/>
+    - Affaire Sarkozy-Kadhafi<br/>
+    - Affaire Bismuth<br/>
+    - Affaire Bygmalion<br/>
+    - Reso-Garantia<br/>
+  links:
+    Wikipedia: https://fr.wikipedia.org/wiki/Nicolas_Sarkozy
+Thierry Solère:
+  alignment: evil
+  img: solère.png
+  description: |
+    Thierry Solère, membre des Républicains puis de La République en
+    marche, il est conseiller du président Emmanuel Macron.<br/>
+    Il est mis en examen en 2019 pour fraude fiscale, détournement de
+    fonds publics et trafic d'influence passif puis en 2022 pour cinq
+    nouvelles infractions.<br/>
+    En date du 3 mars 2023, Thierry Solère est poursuivi pour treize
+    infractions. Cela fait de lui l'homme politique le plus mis en
+    examen de France.<br/>
+Égoutier de Paris:
+  alignment: good
+  img: egoutier.png
+  description: |
+    Les égoutiers de Paris, ces travailleurs en « zone hostile »
+Bébé:
+  alignment: good
+  img: baby.png
+  description: |
+    Shit happens.
+Poule:
+  alignment: good
+  img: poule.png
+  description: |
+    Poule au pot.
+Cochon:
+  alignment: good
+  img: pig.png
+  description: |
+    Cochon dans sa souille.
+Mouches:
+  alignment: good
+  img: fly.png

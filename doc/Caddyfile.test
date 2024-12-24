@@ -1,0 +1,19 @@
+http://localhost:8080 {
+
+	forward_auth http://localhost:8000 {
+		uri "/verify?pygtcha_url=http://localhost:8000/auth"
+		header_up pygtcha-redirect "http://localhost:8080/"
+		header_up pygtcha-domain "localhost"
+	}
+
+	vars root /var/www
+
+	handle_path /  {
+
+		# Set this path to your site's directory.
+		root * {vars.root}
+
+		# Enable the static file server.
+		file_server browse
+	}
+}
