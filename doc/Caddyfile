@@ -1,15 +1,24 @@
-
-http://localhost:8081 {
-	root * /var/www
-	file_server browse
+pygtcha.example.com {
+	reverse_proxy unix//run/pygtcha.sock
 }
 
 
-# Serve your app
-http://localhost:8080 {
-	forward_auth *  https://pygtcha.lareole.net {
-		uri "/verify"
-		header_up pygtcha-url "https://pygtcha.lareole.net/auth"
+www.example.com {
+
+	forward_auth "/protected/*" unix//run/pygtcha.sock {
+		uri "/verify?pygtcha_url=https://pygtcha.example.com/auth"
+		header_up pygtcha-redirect "https://www.example.com/protected/"
+		header_up pygtcha-domain "example.com"
 	}
-	reverse_proxy http://localhost:8081
+
+	vars root /var/www
+
+	handle_path "/protected/*"  {
+
+		# Set this path to your site's directory.
+		root * {vars.root}
+
+		# Enable the static file server.
+		file_server browse
+	}
 }

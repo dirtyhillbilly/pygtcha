@@ -161,6 +161,7 @@ class PygtchaVerify(aiohttp.web.View):
         payload["redirect_url"] = redirect_url
         payload["domain"] = self.request.headers.get("pygtcha-domain")
         payload["csrf"] = uuid4().hex
+        logger.debug(f"setting cookie to {payload}")
 
         jwt_cookie = jwt.encode(payload, config.secret)
         res.set_cookie(
