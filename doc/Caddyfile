@@ -4,11 +4,12 @@ http://localhost:8081 {
 	file_server browse
 }
 
+
 # Serve your app
 http://localhost:8080 {
-	forward_auth * localhost:8000 {
+	forward_auth *  https://pygtcha.lareole.net {
 		uri "/verify"
-		header_up pygtcha-url "http://localhost:8000/auth"
+		header_up pygtcha-url "https://pygtcha.lareole.net/auth"
 	}
 	reverse_proxy http://localhost:8081
 }

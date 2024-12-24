@@ -12,7 +12,7 @@ User=pygtcha
 Group=pygtcha
 WorkingDirectory=/var/lib/pygtcha
 Environment=PYGTCHA_CONFIG=/var/lib/pygtcha/pygtcha.yml
-ExecStart=/var/lib/pygtcha/venv/bin/gunicorn pygtcha.pygtcha:app --bind localhost:8000 --worker-class aiohttp.GunicornWebWorker
+ExecStart=/var/lib/pygtcha/venv/bin/gunicorn pygtcha.pygtcha:app --bind unix:///run/pygtcha.sock --worker-class aiohttp.GunicornWebWorker
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5

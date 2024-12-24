@@ -10,7 +10,6 @@ import importlib.resources
 import logging
 import os
 import random
-import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from enum import Enum
@@ -26,7 +25,7 @@ import yaml  # type: ignore
 from jinja2 import Environment, PackageLoader, select_autoescape
 from PIL import Image
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(filename="/var/log/pygtcha/pygtcha.log", level=logging.DEBUG)
 logger = logging.getLogger()
 
 PIGS = ["porcs.yml", "bouffons.yml", "quiches.yml", "poobag.yml"]
@@ -150,22 +149,28 @@ class PygtchaVerify(aiohttp.web.View):
 
         # build redirection to captcha page
 
-        proto = self.request.headers.get("X-Forwarded-Proto")
-        domain = self.request.headers.get("X-Forwarded-Host")
-        path = self.request.headers.get("X-Forwarded-Uri")
-        redirect_url = f"{proto}://{domain}{path}"
+        logger.debug(self.request.headers)
+        redirect_url = self.request.headers.get("pygtcha-redirect")
 
-        authenticator = self.request.headers.get("pygtcha-url", redirect_url)
+        auth_url = self.request.query.get("pygtcha_url")
+        logger.info(f"will redirect to {auth_url} and then to {redirect_url}")
 
-        res = aiohttp.web.HTTPFound(authenticator)
+        res = aiohttp.web.HTTPFound(auth_url)
         payload = jwt_payload(ttl=600)
 
         payload["redirect_url"] = redirect_url
-        payload["domain"] = domain
+        payload["domain"] = self.request.headers.get("pygtcha-domain")
         payload["csrf"] = uuid4().hex
 
         jwt_cookie = jwt.encode(payload, config.secret)
-        res.set_cookie(f"{config.cookie_name}-redirect", jwt_cookie, samesite="None")
+        res.set_cookie(
+            f"{config.cookie_name}-redirect",
+            jwt_cookie,
+            samesite="None",
+            secure=True,
+            httponly=True,
+            domain=payload["domain"],
+        )
         return res
 
 
@@ -179,26 +184,23 @@ class PygtchaAuth(aiohttp.web.View):
         j2env = self.request.app["j2env"]
         template = j2env.get_template("pygtcha.html.j2")
         pig_selector = self.request.app["selector"]
-        jwt_cookie = self.request.cookies.get(f"{config.cookie_name}-redirect", "")
+        jwt_cookie = self.request.cookies.get(f"{config.cookie_name}-redirect")
 
         try:
-            redirect = jwt.decode(jwt_cookie, config.secret, algorithms="HS256")
-            if len(redirect.get("csrf", "")) != 32:
+            payload = jwt.decode(jwt_cookie, config.secret, algorithms="HS256")
+            if len(payload.get("csrf", "")) != 32:
                 logger.debug("Invalid CSRF")
                 raise ValueError
         except (jwt.PyJWTError, ValueError) as exc:
             # invalid redirect cookie : get back to /verify
-            logger.error(f"Can't validate token [{jwt_cookie}]: {exc}")
+            logger.error(f"Can't validate token [{jwt_cookie}]: {exc}.")
             retry = self.request.app.router["verify"].url_for()
             res = aiohttp.web.HTTPFound(retry)
             res.del_cookie(f"{config.cookie_name}-redirect")
             return res
 
-        redirect_url = redirect.get("redirect_url")
         collection, pigs = pig_selector.select(5)
-        res = template.render(
-            collection=collection, pigs=pigs, redirect_url=redirect_url
-        )
+        res = template.render(collection=collection, pigs=pigs)
         res = aiohttp.web.Response(text=res, content_type="text/html")
         return res
 
@@ -209,14 +211,24 @@ class PygtchaAuth(aiohttp.web.View):
         post_data = await self.request.post()
         category = post_data.get("category")
         pig = post_data.get("selected")
-        redirect_url = urllib.parse.unquote_plus(post_data.get("redirect", ""))
+
+        jwt_cookie = self.request.cookies.get(f"{config.cookie_name}-redirect")
+        payload = jwt.decode(jwt_cookie, config.secret, algorithms="HS256")
+
         logger.debug(f"Validating {config.cookie_name}={pig}")
         pig_selector = self.request.app["selector"]
         if pig_selector.is_evil(category, pig):
             logger.debug("Ok, access granted")
             cookie = jwt.encode(jwt_payload(), config.secret)
-            res = aiohttp.web.HTTPFound(redirect_url)
-            res.set_cookie(config.cookie_name, cookie, samesite="None")
+            res = aiohttp.web.HTTPFound(payload["redirect_url"])
+            res.set_cookie(
+                config.cookie_name,
+                cookie,
+                samesite="Strict",
+                secure=True,
+                httponly=True,
+                domain=payload["domain"],
+            )
             res.del_cookie(f"{config.cookie_name}-redirect")
         else:
             logger.debug("Ko, access refused")
