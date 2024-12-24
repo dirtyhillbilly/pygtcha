@@ -72,6 +72,7 @@ def _load_thumbnail(path: Path, dx: int, dy: int, radius: int) -> str:
 class Pig:
     name: str
     uuid: str
+    category: str
     align: Alignment
     desc: str
     img: Path
@@ -91,16 +92,6 @@ class PigCollection:
     category: str
     title: str
     img_dir: str
-    pigs: dict[str, Pig] = dataclasses.field(default_factory=dict)
-    good: list[Pig] = dataclasses.field(default_factory=list)
-    evil: list[Pig] = dataclasses.field(default_factory=list)
-
-    def add(self, pig: Pig):
-        self.pigs[pig.name] = pig
-        if pig.align == Alignment.GOOD:
-            self.good.append(pig)
-        elif pig.align == Alignment.EVIL:
-            self.evil.append(pig)
 
 
 def jwt_payload(ttl=None):
@@ -124,7 +115,7 @@ def temporize(func):
             logger.debug("Ok")
             raise
         else:
-            await asyncio.sleep(0)
+            await asyncio.sleep(0.4)
         return res
 
     return wrapped
@@ -210,7 +201,6 @@ class PygtchaAuth(aiohttp.web.View):
         """Main handler"""
         config = self.request.app["config"]
         post_data = await self.request.post()
-        category = post_data.get("category")
         pig = post_data.get("selected")
 
         jwt_cookie = self.request.cookies.get(f"{config.cookie_name}-redirect")
@@ -218,7 +208,7 @@ class PygtchaAuth(aiohttp.web.View):
 
         logger.debug(f"Validating {config.cookie_name}={pig}")
         pig_selector = self.request.app["selector"]
-        if pig_selector.is_evil(category, pig):
+        if pig_selector.is_evil(pig):
             logger.debug("Ok, access granted")
             cookie = jwt.encode(jwt_payload(), config.secret)
             res = aiohttp.web.HTTPFound(payload["redirect_url"])
@@ -242,29 +232,22 @@ class PygtchaAuth(aiohttp.web.View):
 class PigSelector:
     def __init__(self):
         self.collection = defaultdict()
+        self.evil = []
+        self.good = {}
         for yaml_def in PIGS:
             self.load_pigs(yaml_def)
 
     def select(self, count=6) -> tuple[PigCollection, list[Pig]]:
-        collections = list(self.collection)
-        category = random.sample(
-            collections,
-            1,
-            counts=[len(self.collection[col].pigs) for col in collections],
-        )[0]
-        collection = self.collection[category]
-        pigs = random.sample(collection.good, count - 1) + [
-            random.choice(collection.evil)
-        ]
+        evil_pig = random.choice(self.evil)
+        collection = self.collection[evil_pig.category]
+        good_pigs = random.sample(self.good[evil_pig.category], count - 1)
+        pigs = [evil_pig] + good_pigs
         random.shuffle(pigs)
         return collection, pigs
 
-    def is_evil(self, category, name):
-        return (
-            category in self.collection
-            and name in self.collection[category].pigs
-            and self.collection[category].pigs[name].align == Alignment.EVIL
-        )
+    def is_evil(self, uuid):
+        """Return True to grant access"""
+        return uuid in [pig.uuid for pig in self.evil]
 
     def load_pigs(self, filename: str):
         ref = importlib.resources.files("pygtcha") / "data" / filename
@@ -273,6 +256,7 @@ class PigSelector:
         self.collection[category] = PigCollection(
             category, header["title"], header["img_dir"]
         )
+        self.good[category] = []
 
         for name, pig in pigs.items():
             if "links" in pig:
@@ -286,20 +270,24 @@ class PigSelector:
                 )
             else:
                 miniature = None
-            self.collection[category].add(
-                Pig(
-                    name,
-                    uuid4().hex,
-                    Alignment(pig["alignment"]),
-                    pig.get("description", ""),
-                    importlib.resources.files("pygtcha")
-                    / "static"
-                    / header["img_dir"]
-                    / pig["img"],
-                    miniature,
-                    links,
-                )
+            subject = Pig(
+                name,
+                uuid4().hex,
+                category,
+                Alignment(pig["alignment"]),
+                pig.get("description", ""),
+                importlib.resources.files("pygtcha")
+                / "static"
+                / header["img_dir"]
+                / pig["img"],
+                miniature,
+                links,
             )
+
+            if subject.align == Alignment.EVIL:
+                self.evil.append(subject)
+            else:
+                self.good[category].append(subject)
 
 
 @dataclasses.dataclass

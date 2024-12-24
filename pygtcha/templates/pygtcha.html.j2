@@ -54,18 +54,17 @@
 {% block content %}
   <form action="" method="POST">
     <div>
-      <h1 class="font-alt font-light u-text-center">Clicke sur {{collection.title}}</h1>
+      <h1 class="font-alt font-light u-text-center">Click sur {{collection.title}}</h1>
     </div>
     <div class="u-flex u-justify-center">
       {% for pig in pigs %}
 	<div>
-	  <button class="pyg" onmouseover="showFullImage('{{pig.uuid}}')" name="selected" value="{{pig.name}}">
+	  <button class="pyg" onmouseover="showFullImage('{{pig.uuid}}')" name="selected" value="{{pig.uuid}}">
 	  <img class="img-stretch"
 	       src="data:image/png;base64,{{pig.thumbnail or pig.img_data}}">
 	  </button>
 	</div>
       {% endfor %}
-      <input type="hidden" name="category" value="{{collection.category}}"/>
     </div>
   </form>
   <div class="u-flex u-flex-column u-align-center" id="full-size-pig"></div>
